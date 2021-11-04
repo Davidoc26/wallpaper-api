@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,3 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/images', [ImageController::class, 'store']);
     Route::post('/images/upload-all', [ImageController::class, 'storeAll']);
 });
+
+Route::post('/auth/login', [LoginController::class, 'login']);
+Route::post('/auth/register', [LoginController::class, 'register']);
