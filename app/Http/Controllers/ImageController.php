@@ -23,4 +23,9 @@ final class ImageController extends Controller
 
         return response()->json(['status' => 'ok']);
     }
+
+    public function addCategory()
+    {
+
+    }
 }
