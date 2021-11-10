@@ -101,4 +101,21 @@ final class ImageService
 
         return $images;
     }
+
+    /**
+     * @param int $id
+     * @param Image $image
+     * @return Image
+     */
+    public function attachCategory(int $id, Image $image): Image
+    {
+        if (!Category::where('id', $id)->exists()) {
+            throw new ModelNotFoundException("Category with id $id not found");
+        }
+
+        $image->categories()->attach($id);
+        $image->load('categories');
+
+        return $image;
+    }
 }

@@ -3,8 +3,6 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ImageController;
-use App\Models\Image;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/categories/{category:slug}', [CategoryController::class, 'update']);
     Route::post('/categories', [CategoryController::class, 'store']);
 });
+Route::get('/images/{image}/download', [ImageController::class, 'download']);
+
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{slug}', [CategoryController::class, 'show']);
 

@@ -17,7 +17,9 @@ final class ImageResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'path' => $this->path,
-            'created_at'=>$this->created_at,
+            'created_at' => $this->created_at,
+            'categories' => $this->whenLoaded('categories', CategoryResource::collection($this->categories), null),
         ];
+
     }
 }

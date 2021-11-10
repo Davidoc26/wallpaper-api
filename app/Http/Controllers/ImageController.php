@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddCategoryToImageRequest;
 use App\Http\Requests\ImagesUploadRequest;
 use App\Http\Requests\ImageUploadRequest;
-use App\Models\Category;
+use App\Http\Resources\ImageResource;
 use App\Models\Image;
 use App\Services\ImageService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use function response;
 
@@ -28,15 +27,10 @@ final class ImageController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function addCategory(AddCategoryToImageRequest $request, Image $image)
+    public function addCategory(AddCategoryToImageRequest $request, Image $image, ImageService $imageService): ImageResource
     {
-        if (!Category::where('id', $id = $request->input('category_id'))->exists()) {
-            throw new ModelNotFoundException("Category with id $id not found");
-        }
+        $image = $imageService->attachCategory($request->input('category_id'), $image);
 
-        $image->categories()->attach($request->input('category_id'));
-        $image->load('categories');
-
-        dd($image);
+        return new ImageResource($image);
     }
 }
