@@ -13,6 +13,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function count;
+use function dump;
 use function now;
 
 final class ImageUploader
@@ -49,7 +50,7 @@ final class ImageUploader
 
         $savedPath = $this->filesystem->putFile($path, $dto->getUploadedFile());
 
-        return $this->prepareDto($dto->getUserId(), $dto->getName(), $savedPath);
+        return $this->prepareDto($dto->getUserId(), $dto->getName(), $savedPath, $dto->getCategoryId());
     }
 
     /**
@@ -67,6 +68,11 @@ final class ImageUploader
         return $collection;
     }
 
+    public function removeSavedImage(SavedImageDto $dto): bool
+    {
+        return $this->filesystem->delete($dto->getPath());
+    }
+
     /**
      * @return string
      */
@@ -79,10 +85,11 @@ final class ImageUploader
      * @param int $userId
      * @param string $name
      * @param string $path
+     * @param int|null $categoryId
      * @return SavedImageDto
      */
-    private function prepareDto(int $userId, string $name, string $path): SavedImageDto
+    private function prepareDto(int $userId, string $name, string $path, int $categoryId = null): SavedImageDto
     {
-        return new SavedImageDto($userId, $name, $path);
+        return new SavedImageDto($userId, $name, $path, $categoryId);
     }
 }

@@ -7,12 +7,14 @@ final class SavedImageDto
     private int $userId;
     private string $name;
     private string $path;
+    private ?int $categoryId;
 
-    public function __construct(int $userId, string $name, string $path)
+    public function __construct(int $userId, string $name, string $path, ?int $categoryId = null)
     {
         $this->userId = $userId;
         $this->name = $name;
         $this->path = $path;
+        $this->categoryId = $categoryId;
     }
 
     /**
@@ -37,6 +39,14 @@ final class SavedImageDto
     public function getPath(): string
     {
         return $this->path;
+    }
+
+    /**
+     * @return ?int
+     */
+    public function getCategoryId(): ?int
+    {
+        return $this->categoryId;
     }
 
 }

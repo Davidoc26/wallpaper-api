@@ -6,8 +6,10 @@ use App\Dto\Collections\ImageUploadCollection;
 use App\Dto\Collections\SavedImageCollection;
 use App\Dto\ImageUploadDto;
 use App\Dto\SavedImageDto;
+use App\Models\Category;
 use App\Models\Image;
 use App\Services\Uploader\ImageUploader;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use function collect;
 
@@ -45,6 +47,35 @@ final class ImageService
      * @return Image
      */
     public function store(SavedImageDto $dto): Image
+    {
+        if (null !== $dto->getCategoryId()) {
+            if (!Category::where('id', $id = $dto->getCategoryId())->exists()) {
+                $this->imageUploader->removeSavedImage($dto);
+                throw new ModelNotFoundException("Category with id $id not found");
+            }
+            return $this->storeWithCategory($dto);
+        }
+
+        return $this->storeImage($dto);
+    }
+
+    /**
+     * @param SavedImageDto $dto
+     * @return Image
+     */
+    private function storeWithCategory(SavedImageDto $dto): Image
+    {
+        $image = $this->storeImage($dto);
+        $image->categories()->attach($dto->getCategoryId());
+
+        return $image;
+    }
+
+    /**
+     * @param SavedImageDto $dto
+     * @return Image
+     */
+    private function storeImage(SavedImageDto $dto): Image
     {
         $image = new Image();
         $image->user_id = $dto->getUserId();

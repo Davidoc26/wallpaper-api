@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ImageController;
 use App\Models\Image;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,10 +17,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/images', [ImageController::class, 'store']);
     Route::post('/images/upload-all', [ImageController::class, 'storeAll']);
+    Route::post('/images/{image}/add-category/', [ImageController::class, 'addCategory']);
+
     Route::patch('/categories/{category:slug}', [CategoryController::class, 'update']);
     Route::post('/categories', [CategoryController::class, 'store']);
 });
