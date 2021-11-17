@@ -6,7 +6,7 @@ use App\Dto\ImageUploadDto;
 use ArrayIterator;
 use IteratorAggregate;
 
-final class ImageUploadCollection extends DtoCollection implements IteratorAggregate
+final class ImageUploadCollection extends DtoCollection
 {
     /**
      * @var array<ImageUploadDto>
@@ -16,7 +16,7 @@ final class ImageUploadCollection extends DtoCollection implements IteratorAggre
     /**
      * @param ImageUploadDto $imageUploadDto
      */
-    public function add(ImageUploadDto $imageUploadDto)
+    public function add(ImageUploadDto $imageUploadDto): void
     {
         $this->images[] = $imageUploadDto;
     }
