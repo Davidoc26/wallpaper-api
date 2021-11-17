@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\ImageService;
 use App\Services\Uploader\ImageUploader;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +16,7 @@ final class ImageServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->when(ImageUploader::class)
+        $this->app->when([ImageUploader::class, ImageService::class])
             ->needs(Filesystem::class)
             ->give(function ($app) {
                 return $app->get('filesystem')->disk('public');

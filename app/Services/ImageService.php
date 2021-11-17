@@ -4,22 +4,34 @@ namespace App\Services;
 
 use App\Dto\Collections\ImageUploadCollection;
 use App\Dto\Collections\SavedImageCollection;
+use App\Dto\DownloadImageDto;
 use App\Dto\ImageUploadDto;
 use App\Dto\SavedImageDto;
+use App\Exceptions\ImageDownloadException;
 use App\Models\Category;
 use App\Models\Image;
 use App\Services\Uploader\ImageUploader;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
+use Intervention\Image\ImageManager;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function collect;
+use function count;
 
 final class ImageService
 {
     private ImageUploader $imageUploader;
+    private ImageManager $imageManager;
+    private Filesystem $filesystem;
+    private ValidatorInterface $validator;
 
-    public function __construct(ImageUploader $imageUploader)
+    public function __construct(ImageUploader $imageUploader, Imagemanager $imageManager, Filesystem $filesystem, ValidatorInterface $validator)
     {
         $this->imageUploader = $imageUploader;
+        $this->imageManager = $imageManager;
+        $this->filesystem = $filesystem;
+        $this->validator = $validator;
     }
 
     /**
@@ -117,5 +129,26 @@ final class ImageService
         $image->load('categories');
 
         return $image;
+    }
+
+    public function download(DownloadImageDto $dto): \Intervention\Image\Image
+    {
+        $violations = $this->validator->validate($dto);
+
+        if (count($violations) > 0) {
+            throw new ImageDownloadException($violations);
+        }
+
+        if ($dto->getHeight() && $dto->getWidth()) {
+            return $this->resize($dto->getPath(), $dto->getWidth(), $dto->getHeight());
+        }
+
+        return $this->imageManager->make($this->filesystem->path($dto->getPath()));
+    }
+
+    private function resize(string $path, int $width, int $height): \Intervention\Image\Image
+    {
+        $img = $this->imageManager->make($this->filesystem->path($path));
+        return $img->resize($width, $height);
     }
 }

@@ -13,7 +13,6 @@ use Illuminate\Config\Repository;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function count;
-use function dump;
 use function now;
 
 final class ImageUploader
