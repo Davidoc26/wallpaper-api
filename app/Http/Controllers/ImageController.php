@@ -15,11 +15,11 @@ use function response;
 
 final class ImageController extends Controller
 {
-    public function store(ImageUploadRequest $request, ImageService $imageService): JsonResponse
+    public function store(ImageUploadRequest $request, ImageService $imageService): ImageResource
     {
-        $imageService->upload($request->getDto());
+        $image = $imageService->upload($request->getDto());
 
-        return response()->json(['status' => 'ok']);
+        return new ImageResource($image);
     }
 
     public function storeAll(ImagesUploadRequest $request, ImageService $imageService): JsonResponse
