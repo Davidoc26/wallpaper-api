@@ -10,6 +10,7 @@ final class GetCategoriesRequest extends FormRequest
     {
         return [
             'limit' => ['min:1', 'max:15', 'integer'],
+            'page' => ['min:1', 'integer'],
         ];
     }
 }

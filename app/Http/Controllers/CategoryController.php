@@ -17,10 +17,12 @@ final class CategoryController
 {
     public function index(GetCategoriesRequest $request): AnonymousResourceCollection
     {
-        $categories = Category::paginate(
-            perPage: $request->input('limit') ?? Category::PAGINATION_LIMIT,
+        $categories = Category::simplePaginate(
+            perPage: $request->input('limit', Category::PAGINATION_LIMIT),
             columns: ['id', 'name', 'slug'],
+            page: $request->input('page', 1)
         );
+        $categories->withQueryString();
 
         return CategoryResource::collection($categories);
     }
@@ -29,7 +31,7 @@ final class CategoryController
     {
         $category = Category::with([
             'images' => fn(BelongsToMany $q) => $q->latest()
-                ->limit($request->input('limit') ?? Image::PAGINATION_LIMIT)])
+                ->limit($request->input('limit', Image::PAGINATION_LIMIT))])
             ->where('slug', $slug)
             ->firstOrFail();
 
