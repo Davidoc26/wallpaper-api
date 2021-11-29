@@ -11,6 +11,7 @@ final class ImagesUploadRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'images' => ['required', 'array'],
             'images.*.name' => ['required', 'string'],
             'images.*.image' => ['required', 'image'],
         ];
