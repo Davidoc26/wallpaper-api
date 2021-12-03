@@ -7,11 +7,13 @@ use App\Dto\Collections\SavedImageCollection;
 use App\Dto\DownloadImageDto;
 use App\Dto\ImageUploadDto;
 use App\Dto\SavedImageDto;
+use App\Exceptions\CategoryAttachmentException;
 use App\Exceptions\ImageDownloadException;
 use App\Models\Category;
 use App\Models\Image;
 use App\Services\Uploader\ImageUploader;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Intervention\Image\ImageManager;
@@ -125,6 +127,10 @@ final class ImageService
             throw new ModelNotFoundException("Category with id $id not found");
         }
 
+        if ($this->containsCategory($id, $image)) {
+            throw new CategoryAttachmentException("Image already contains category $id");
+        }
+
         $image->categories()->attach($id);
         $image->load('categories');
 
@@ -144,6 +150,11 @@ final class ImageService
         }
 
         return $this->imageManager->make($this->filesystem->path($dto->getPath()));
+    }
+
+    private function containsCategory(string $categoryId, Image $image): bool
+    {
+        return $image->categories()->where('id', $categoryId)->exists();
     }
 
     private function resize(string $path, int $width, int $height): \Intervention\Image\Image
