@@ -7,15 +7,14 @@ use App\Dto\Collections\SavedImageCollection;
 use App\Dto\DownloadImageDto;
 use App\Dto\ImageUploadDto;
 use App\Dto\SavedImageDto;
-use App\Exceptions\CategoryAttachmentException;
 use App\Exceptions\ImageDownloadException;
 use App\Models\Category;
 use App\Models\Image;
 use App\Services\Uploader\ImageUploader;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
 use Intervention\Image\ImageManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use function collect;
@@ -128,7 +127,9 @@ final class ImageService
         }
 
         if ($this->containsCategory($id, $image)) {
-            throw new CategoryAttachmentException("Image already contains category $id");
+            throw ValidationException::withMessages([
+                "Image alredy contains category $id",
+            ]);
         }
 
         $image->categories()->attach($id);
