@@ -4,11 +4,39 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
+use OpenApi\Annotations as OA;
 use function asset;
-use function storage_path;
-use function url;
 
+/**
+ * @OA\Schema(
+ *      description="Image resource",
+ *      @OA\Property(
+ *          property="id",
+ *          format="int64",
+ *          example="1",
+ *      ),
+ *      @OA\Property(
+ *          format="string",
+ *          property="name",
+ *          example="My Image",
+ *      ),
+ *      @OA\Property(
+ *          format="string",
+ *          property="path",
+ *          example="https://site.com/storage/wallpapers/01_12_21/image.png",
+ *      ),
+ *      @OA\Property(
+ *          format="string",
+ *          property="created_at",
+ *          example="2021-12-03T00:00:00.000000Z",
+ *      ),
+ *      @OA\Property(
+ *          type="array",
+ *          property="categories",
+ *          @OA\Items(),
+ *      )
+ * )
+ */
 final class ImageResource extends JsonResource
 {
     /**
