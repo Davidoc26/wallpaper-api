@@ -12,6 +12,8 @@ use App\Models\Category;
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 
 final class CategoryController
 {
@@ -29,11 +31,13 @@ final class CategoryController
 
     public function show(GetCategoryWithImagesRequest $request, string $slug): CategoryWithImagesResource
     {
-        $category = Category::with([
-            'images' => fn(BelongsToMany $q) => $q->latest()
-                ->limit($request->input('limit', Image::PAGINATION_LIMIT))])
-            ->where('slug', $slug)
-            ->firstOrFail();
+        $category = Category::where('slug', $slug)->firstOrFail();
+        $category->setRelation('images', $category->images()
+            ->simplePaginate(
+                perPage: $request->input('limit'),
+                page: $request->input('page')
+            )
+        );
 
         return new CategoryWithImagesResource($category);
     }

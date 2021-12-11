@@ -13,6 +13,7 @@ final class GetCategoryWithImagesRequest extends FormRequest
 
         return [
             'limit' => ['min:1', "max:$max", 'integer'],
+            'page' => ['min:1', 'integer'],
         ];
     }
 }
