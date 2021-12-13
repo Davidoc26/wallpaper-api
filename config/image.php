@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'wallpapers-path' => '/wallpapers/'
+    'wallpapers-path' => 'wallpapers/'
 ];
