@@ -56,6 +56,26 @@ final class ImageController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/images/{image}",
+     *     summary="Show image info",
+     *     @OA\Parameter(in="path",name="image",example="1",description="Image ID"),
+     *     @OA\Response(response="200",description="Image info",
+     *          @OA\JsonContent(
+     *               ref="#/components/schemas/ImageResource",
+     *          ),
+     *     ),
+     *     @OA\Response(response="404",description="Image not found", @OA\JsonContent())
+     * )
+     */
+    public function show(Image $image): ImageResource
+    {
+        $image->load('categories');
+
+        return new ImageResource($image);
+    }
+
+    /**
      * @OA\Post(
      *     path="/api/images/upload-all",
      *     summary="Upload multiple images",

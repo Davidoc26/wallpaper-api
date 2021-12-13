@@ -9,6 +9,7 @@ use Faker\Factory;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Storage;
 use Tests\TestCase;
 
@@ -86,5 +87,27 @@ class ImageApiTest extends TestCase
 
         $response = $this->getJson("/api/images/$imageId/download");
         $response->assertHeader('Content-Type', 'image/png');
+    }
+
+    public function testImageShow(): void
+    {
+        $response = $this->actingAs($this->user)
+            ->postJson('/api/images', [
+                'name' => $imageName = Factory::create()->word,
+                'image' => UploadedFile::fake()->image('test.png'),
+            ]);
+
+        $response->assertStatus(201);
+        $imageId = $response->json('data.id');
+
+        $response = $this->actingAs($this->user)
+            ->getJson("/api/images/$imageId");
+
+        $response->assertJson(fn(AssertableJson $json) => $json
+            ->where('data.id', $imageId)
+            ->where('data.name', $imageName)
+            ->has('data.path')
+            ->has('data.created_at')
+        );
     }
 }
