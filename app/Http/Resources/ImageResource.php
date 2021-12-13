@@ -33,7 +33,9 @@ use function asset;
  *      @OA\Property(
  *          type="array",
  *          property="categories",
- *          @OA\Items(),
+ *          @OA\Items(
+ *              ref="#/components/schemas/CategoryResource",
+ *          ),
  *      )
  * )
  */
