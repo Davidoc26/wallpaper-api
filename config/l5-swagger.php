@@ -61,7 +61,7 @@ return [
             */
             'middleware' => [
                 'api' => [
-//                    NotFoundWhenProduction::class,
+                    NotFoundWhenProduction::class,
                 ],
                 'asset' => [],
                 'docs' => [],
