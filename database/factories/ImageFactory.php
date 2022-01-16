@@ -20,7 +20,7 @@ final class ImageFactory extends Factory
         $storageFolder = config('image.wallpapers-path') . '31_11_21/';
         $filePath = storage_path("app/public/$storageFolder");
         if (!File::exists($filePath)) {
-            File::makeDirectory($filePath);
+            File::makeDirectory($filePath, recursive: true);
         }
 
         return [
