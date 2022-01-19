@@ -12,6 +12,6 @@ The app uses docker, to run it just use `docker-compose up --build`
 
 To see the existing routes, first generate the documentation:
 
-`php artisan l5swagger: generate`
+`php artisan l5-swagger:generate`
 
 Documentation will be available at(only in development mode): http://localhost:8080/api/documentation
