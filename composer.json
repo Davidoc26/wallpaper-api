@@ -17,8 +17,8 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "staudenmeir/eloquent-eager-limit": "^1.0",
-        "symfony/cache": "^5.3",
-        "symfony/validator": "^5.3"
+        "symfony/cache": "^6.0",
+        "symfony/validator": "^6.0"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^1.0",
